@@ -22,7 +22,7 @@ import {
 
 export default function BookingManagement() {
   const [cancellingBooking, setCancellingBooking] = useState(null);
-  const [uploadingBooking, setUploadingBooking] = useState(null);
+  const [uploadingBookingId, setUploadingBookingId] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: bookings = [] } = useQuery({
@@ -250,7 +250,7 @@ export default function BookingManagement() {
                           variant="outline"
                           size="sm"
                           className="h-7 text-xs"
-                          onClick={() => setUploadingBooking(booking)}
+                          onClick={() => setUploadingBookingId(booking.id)}
                         >
                           <Upload className="w-3 h-3 ml-1" />
                           העלאת אישורים
@@ -278,15 +278,15 @@ export default function BookingManagement() {
       </div>
 
       {/* Confirmation Upload Dialog */}
-      <Dialog open={!!uploadingBooking} onOpenChange={() => setUploadingBooking(null)}>
+      <Dialog open={!!uploadingBookingId} onOpenChange={() => setUploadingBookingId(null)}>
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>העלאת תמונות אישור</DialogTitle>
           </DialogHeader>
-          {uploadingBooking && (
+          {uploadingBookingId && bookings.find(b => b.id === uploadingBookingId) && (
             <ConfirmationUploader
-              booking={uploadingBooking}
-              onClose={() => setUploadingBooking(null)}
+              booking={bookings.find(b => b.id === uploadingBookingId)}
+              onClose={() => setUploadingBookingId(null)}
             />
           )}
         </DialogContent>
