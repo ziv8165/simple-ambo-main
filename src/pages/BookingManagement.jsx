@@ -4,8 +4,10 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { AlertCircle, Calendar, DollarSign, Shield, XCircle } from 'lucide-react';
+import { AlertCircle, Calendar, DollarSign, Shield, XCircle, Upload, Image as ImageIcon, Eye } from 'lucide-react';
 import { toast } from 'sonner';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import ConfirmationUploader from '@/components/booking/ConfirmationUploader';
 
 import {
   AlertDialog,
@@ -20,11 +22,13 @@ import {
 
 export default function BookingManagement() {
   const [cancellingBooking, setCancellingBooking] = useState(null);
+  const [uploadingBooking, setUploadingBooking] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: bookings = [] } = useQuery({
     queryKey: ['bookings'],
-    queryFn: () => base44.entities.Booking.list()
+    queryFn: () => base44.entities.Booking.list(),
+    refetchInterval: 5000
   });
 
   const { data: users = [] } = useQuery({
@@ -205,7 +209,7 @@ export default function BookingManagement() {
                         </div>
                       </div>
 
-                      <div className="flex gap-2 text-xs">
+                      <div className="flex gap-2 text-xs mb-3">
                         <div className="flex items-center gap-1 text-[#422525]/60">
                           <DollarSign className="w-3 h-3" />
                           Payment: {booking.paymentIntentId ? 'Processed' : 'Pending'}
@@ -214,6 +218,43 @@ export default function BookingManagement() {
                           <Shield className="w-3 h-3" />
                           Deposit: {booking.depositHoldId ? 'Held' : 'Not held'}
                         </div>
+                      </div>
+
+                      {/* Confirmation Images */}
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {booking.confirmationImages && booking.confirmationImages.length > 0 ? (
+                          <>
+                            <div className="flex items-center gap-1">
+                              {booking.confirmationImages.slice(0, 4).map((url, idx) => (
+                                <div key={idx} className="w-10 h-10 rounded border border-[#E6DDD0] overflow-hidden">
+                                  <img src={url} alt="" className="w-full h-full object-cover" />
+                                </div>
+                              ))}
+                              {booking.confirmationImages.length > 4 && (
+                                <span className="text-xs text-[#422525]/60 mr-1">
+                                  +{booking.confirmationImages.length - 4}
+                                </span>
+                              )}
+                            </div>
+                            <Badge className="bg-green-100 text-green-800 text-xs">
+                              <ImageIcon className="w-3 h-3 ml-1" />
+                              {booking.confirmationImages.length} אישורים
+                            </Badge>
+                          </>
+                        ) : (
+                          <Badge className="bg-yellow-100 text-yellow-800 text-xs">
+                            ללא תמונות אישור
+                          </Badge>
+                        )}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-7 text-xs"
+                          onClick={() => setUploadingBooking(booking)}
+                        >
+                          <Upload className="w-3 h-3 ml-1" />
+                          העלאת אישורים
+                        </Button>
                       </div>
                     </div>
 
@@ -235,6 +276,21 @@ export default function BookingManagement() {
           })}
         </div>
       </div>
+
+      {/* Confirmation Upload Dialog */}
+      <Dialog open={!!uploadingBooking} onOpenChange={() => setUploadingBooking(null)}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>העלאת תמונות אישור</DialogTitle>
+          </DialogHeader>
+          {uploadingBooking && (
+            <ConfirmationUploader
+              booking={uploadingBooking}
+              onClose={() => setUploadingBooking(null)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Cancellation Dialog */}
       <AlertDialog open={!!cancellingBooking} onOpenChange={() => setCancellingBooking(null)}>
