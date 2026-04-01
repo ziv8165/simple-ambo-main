@@ -5,17 +5,23 @@ import { Button } from '@/components/ui/button';
 import { Upload, X, Loader2, Image as ImageIcon, ZoomIn } from 'lucide-react';
 import { toast } from 'sonner';
 
+function isPdfUrl(url) {
+  if (!url) return false;
+  const clean = url.split('?')[0].split('#')[0];
+  return clean.toLowerCase().endsWith('.pdf');
+}
+
 export default function ConfirmationUploader({ booking, onClose }) {
+  const [images, setImages] = useState(booking.confirmationImages || []);
   const [uploading, setUploading] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
   const queryClient = useQueryClient();
 
-  const images = booking.confirmationImages || [];
-
   const updateImagesMutation = useMutation({
     mutationFn: (newImages) =>
       base44.entities.Booking.update(booking.id, { confirmationImages: newImages }),
-    onSuccess: () => {
+    onSuccess: (_, newImages) => {
+      setImages(newImages);
       queryClient.invalidateQueries({ queryKey: ['bookings'] });
       toast.success('תמונות האישור עודכנו');
     },
@@ -96,7 +102,7 @@ export default function ConfirmationUploader({ booking, onClose }) {
               key={index}
               className="relative group rounded-lg overflow-hidden border border-[#E6DDD0] aspect-video"
             >
-              {url.endsWith('.pdf') ? (
+              {isPdfUrl(url) ? (
                 <div className="w-full h-full bg-gray-100 flex items-center justify-center">
                   <div className="text-center">
                     <ImageIcon className="w-8 h-8 text-gray-400 mx-auto mb-1" />

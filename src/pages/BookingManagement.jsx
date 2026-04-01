@@ -20,6 +20,12 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
+function isPdfUrl(url) {
+  if (!url) return false;
+  const clean = url.split('?')[0].split('#')[0];
+  return clean.toLowerCase().endsWith('.pdf');
+}
+
 export default function BookingManagement() {
   const [cancellingBooking, setCancellingBooking] = useState(null);
   const [uploadingBookingId, setUploadingBookingId] = useState(null);
@@ -227,7 +233,13 @@ export default function BookingManagement() {
                             <div className="flex items-center gap-1">
                               {booking.confirmationImages.slice(0, 4).map((url, idx) => (
                                 <div key={idx} className="w-10 h-10 rounded border border-[#E6DDD0] overflow-hidden">
-                                  <img src={url} alt="" className="w-full h-full object-cover" />
+                                  {isPdfUrl(url) ? (
+                                    <a href={url} target="_blank" rel="noopener noreferrer" className="w-full h-full bg-gray-100 flex items-center justify-center">
+                                      <ImageIcon className="w-4 h-4 text-gray-400" />
+                                    </a>
+                                  ) : (
+                                    <img src={url} alt="" className="w-full h-full object-cover" />
+                                  )}
                                 </div>
                               ))}
                               {booking.confirmationImages.length > 4 && (
