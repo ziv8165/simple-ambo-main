@@ -3,7 +3,6 @@ import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Upload, X, Loader2, Image as ImageIcon, ZoomIn } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 
 export default function ConfirmationUploader({ booking, onClose }) {
@@ -140,21 +139,27 @@ export default function ConfirmationUploader({ booking, onClose }) {
         </Button>
       </div>
 
-      {/* Image Preview Dialog */}
-      <Dialog open={!!previewImage} onOpenChange={() => setPreviewImage(null)}>
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
-            <DialogTitle>תצוגת אישור</DialogTitle>
-          </DialogHeader>
-          {previewImage && (
-            previewImage.endsWith('.pdf') ? (
-              <iframe src={previewImage} className="w-full h-[70vh] rounded-lg" title="PDF Preview" />
+      {/* Image Preview Overlay */}
+      {previewImage && (
+        <div
+          className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4"
+          onClick={() => setPreviewImage(null)}
+        >
+          <button
+            onClick={() => setPreviewImage(null)}
+            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 text-white flex items-center justify-center hover:bg-white/30"
+          >
+            <X className="w-6 h-6" />
+          </button>
+          <div className="max-w-3xl w-full" onClick={(e) => e.stopPropagation()}>
+            {previewImage.endsWith('.pdf') ? (
+              <iframe src={previewImage} className="w-full h-[70vh] rounded-lg bg-white" title="PDF Preview" />
             ) : (
               <img src={previewImage} alt="אישור" className="w-full rounded-lg" />
-            )
-          )}
-        </DialogContent>
-      </Dialog>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
