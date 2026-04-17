@@ -120,8 +120,8 @@ function getEmailContent(type, data) {
       body: `שלום ${data.userName},\n\nיש עדכון בפנייה #${data.ticketId}.\n\nסטטוס: ${data.status}\n${data.adminNote ? `\nהערת התמיכה: ${data.adminNote}` : ''}\n\nצפה בפרטים באפליקציה.\n\nצוות SIMPLEambo`
     },
     'REVIEW_REQUEST': {
-      subject: '✅ הצ\'ק-אאוט הושלם - נשמח לשמוע על החוויה',
-      body: `שלום ${data.guestName},\n\nהצ'ק-אאוט שלך מ"${data.listingTitle}" הושלם. מקווים שנהנית מהשהייה!\n\nכעת תוכל/י לדרג את החוויה ולכתוב ביקורת:\n${data.reviewUrl || 'כנס/י לאפליקציה כדי לכתוב ביקורת'}\n\nהדירוג שלך עוזר לאורחים אחרים לקבל החלטות מושכלות ולמארחים לשפר את השירות.\n\nתודה,\nצוות SIMPLEambo`
+      subject: '⭐ נשמח לשמוע על החוויה שלך',
+      body: `שלום ${data.guestName},\n\nנשמח אם תוכל/י לדרג את החוויה ולכתוב ביקורת על "${data.listingTitle}":\n${data.reviewUrl || 'כנס/י לאפליקציה כדי לכתוב ביקורת'}\n\nהדירוג שלך עוזר לאורחים אחרים לקבל החלטות מושכלות ולמארחים לשפר את השירות.\n\nתודה,\nצוות SIMPLEambo`
     },
     'HOST_BOOKING_REQUEST': {
       subject: '🏠 בקשת הזמנה חדשה לנכס שלך',
