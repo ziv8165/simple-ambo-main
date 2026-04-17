@@ -101,7 +101,7 @@ function getEmailContent(type, data) {
     },
     'CHECK_OUT_REMINDER': {
       subject: '👋 תזכורת: צ\'ק-אאוט מחר',
-      body: `שלום ${data.guestName},\n\nזוהי תזכורת שהצ'ק-אאוט שלך מ"${data.listingTitle}" מתוכנן למחר.\n\nשעת יציאה: 11:00\n\nאנא וודא שהדירה נקייה ומסודרת, וכל הדברים במקומם.\n\nנשמח לקבל ביקורת על השהייה שלך!\n\nתודה,\nצוות SIMPLEambo`
+      body: `שלום ${data.guestName},\n\nזוהי תזכורת שהצ'ק-אאוט שלך מ"${data.listingTitle}" מתוכנן למחר.\n\nשעת יציאה: ${data.checkOutTime || '11:00'}\n\nאנא וודא שהדירה נקייה ומסודרת, וכל הדברים במקומם.\n\nתודה,\nצוות SIMPLEambo`
     },
     'PAYMENT_CONFIRMED': {
       subject: '💳 התשלום אושר בהצלחה',
@@ -120,8 +120,8 @@ function getEmailContent(type, data) {
       body: `שלום ${data.userName},\n\nיש עדכון בפנייה #${data.ticketId}.\n\nסטטוס: ${data.status}\n${data.adminNote ? `\nהערת התמיכה: ${data.adminNote}` : ''}\n\nצפה בפרטים באפליקציה.\n\nצוות SIMPLEambo`
     },
     'REVIEW_REQUEST': {
-      subject: '⭐ ספר לנו על החוויה שלך',
-      body: `שלום ${data.guestName},\n\nתודה ששהית ב"${data.listingTitle}"!\n\nנשמח לשמוע על החוויה שלך - הביקורת שלך עוזרת לאורחים אחרים לקבל החלטות מושכלות.\n\nכתוב ביקורת באפליקציה.\n\nתודה,\nצוות SIMPLEambo`
+      subject: '✅ הצ\'ק-אאוט הושלם - נשמח לשמוע על החוויה',
+      body: `שלום ${data.guestName},\n\nהצ'ק-אאוט שלך מ"${data.listingTitle}" הושלם. מקווים שנהנית מהשהייה!\n\nכעת תוכל/י לדרג את החוויה ולכתוב ביקורת:\n${data.reviewUrl || 'כנס/י לאפליקציה כדי לכתוב ביקורת'}\n\nהדירוג שלך עוזר לאורחים אחרים לקבל החלטות מושכלות ולמארחים לשפר את השירות.\n\nתודה,\nצוות SIMPLEambo`
     },
     'HOST_BOOKING_REQUEST': {
       subject: '🏠 בקשת הזמנה חדשה לנכס שלך',

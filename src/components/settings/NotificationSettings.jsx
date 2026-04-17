@@ -78,7 +78,7 @@ export default function NotificationSettings() {
     { key: 'newMessage', label: 'הודעה חדשה', icon: MessageSquare },
     { key: 'sosAlerts', label: 'התראות חירום (SOS)', icon: Bell },
     { key: 'supportTicketUpdates', label: 'עדכוני תמיכה', icon: Bell },
-    { key: 'reviewRequest', label: 'בקשת ביקורת', icon: Bell },
+    { key: 'reviewRequest', label: 'סיכום צ\'ק-אאוט ובקשת ביקורת', icon: Bell },
     { key: 'hostBookingRequest', label: 'בקשות הזמנה (מארחים)', icon: Bell },
     { key: 'newListings', label: 'דירות חדשות', icon: Bell },
     { key: 'priceDrops', label: 'ירידת מחירים', icon: Bell }
