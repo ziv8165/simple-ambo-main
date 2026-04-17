@@ -49,6 +49,24 @@ export default function UserProfile360() {
     enabled: !!userId
   });
 
+  const { data: receivedReviews } = useQuery({
+    queryKey: ['userReceivedReviews', userId],
+    queryFn: async () => {
+      return await base44.entities.Review.filter({ targetId: userId });
+    },
+    enabled: !!userId
+  });
+
+  const credibilityScore = React.useMemo(() => {
+    if (!receivedReviews || receivedReviews.length === 0) return null;
+    const ratings = receivedReviews
+      .map(r => r.overallRating)
+      .filter(r => typeof r === 'number' && r > 0);
+    if (ratings.length === 0) return null;
+    const avg = ratings.reduce((sum, r) => sum + r, 0) / ratings.length;
+    return { avg: avg.toFixed(1), count: ratings.length };
+  }, [receivedReviews]);
+
   const sendNotificationMutation = useMutation({
     mutationFn: async (data) => {
       const response = await base44.functions.invoke('sendManualNotification', data);
@@ -185,7 +203,14 @@ export default function UserProfile360() {
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">ציון אמינות</p>
-                    <p className="text-2xl font-bold text-gray-900">-</p>
+                    {credibilityScore ? (
+                      <>
+                        <p className="text-2xl font-bold text-gray-900">{credibilityScore.avg}</p>
+                        <p className="text-xs text-gray-400">מבוסס על {credibilityScore.count} ביקורות</p>
+                      </>
+                    ) : (
+                      <p className="text-2xl font-bold text-gray-900">-</p>
+                    )}
                   </div>
                 </div>
               </CardContent>
